@@ -11,11 +11,11 @@ export default () =>
       port: 3000,
       // 数据库配置
       mysql: {
-        host: 'localhost',
-        port: 3306,
-        username: 'username',
-        password: 'password',
-        database: 'database',
+        host: 'sh-cynosdbmysql-grp-jgarzx84.sql.tencentcdb.com',
+        port: 21954 || 3306,
+        username: 'root',
+        password: 'kushuye777',
+        database: 'sms-db',
         synchronize: false,
       },
     },

@@ -1,3 +1,3 @@
 export const cryptoConstants = {
-  privateKey: 'giibee.com',
+  privateKey: 'melon',
 };

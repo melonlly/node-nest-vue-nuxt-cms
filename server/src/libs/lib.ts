@@ -6,6 +6,6 @@ export const cryptoString = (str) => {
 };
 
 export const jwtConstants = {
-  secret: 'giibee.com',
-  adminSecret: 'admin.giibee.com',
+  secret: '123456',
+  adminSecret: 'Kushuye:',
 };
