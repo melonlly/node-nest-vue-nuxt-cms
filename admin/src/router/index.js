@@ -80,9 +80,9 @@ export const constantRoutes = [
     children: [],
   },
   homeRouter,
-  aboutRouter,
+  // aboutRouter,
 
-  productRouter,
+  // productRouter,
   userRouter,
 ]
 
