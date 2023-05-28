@@ -452,7 +452,8 @@ export const baseHost = process.env.VUE_APP_BASE_HOST
 
 // 权限角色匹配
 export function roleName(name) {
-  return name === 'admin' ? '管理员' : '编辑员'
+  return '管理员'
+  // return name === 'admin' ? '管理员' : '编辑员'
 }
 
 //

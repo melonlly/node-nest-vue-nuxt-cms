@@ -1,21 +1,35 @@
-import { Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LocalAuthGuardUser } from './guards/local-auth.guard';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { Log } from 'src/libs/utils';
+import { Log, logger } from 'src/libs/utils';
+import { LoginUserDto } from './dto/login-user.dto';
+import { UsersService } from 'src/users/users.service';
 
 @ApiTags('user auth')
 @Controller('api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
-  @UseGuards(LocalAuthGuardUser)
   @Post('login')
   @ApiOperation({ summary: '用户登录' })
-  async login(@Request() req) {
-    console.log('user auth ctrl', req.user);
-    Log({ req, user: req.user });
-    return this.authService.login(req.user);
+  async login(@Body() loginUserDto: LoginUserDto, @Request() req) {
+    loginUserDto.name = decodeURIComponent(loginUserDto.name);
+    console.log('user auth ctrl ', loginUserDto.name);
+    const user = await this.userService.findOneByPwd(loginUserDto);
+    console.log(user);
+    if (user && user.id) {
+      Log({ req, user: user });
+      return this.authService.login(user);
+    } else {
+      logger(`${loginUserDto.name} ${loginUserDto.password} 登录失败`);
+      return {
+        status: false,
+        message: '登录失败',
+      };
+    }
   }
   // async login(@Body() loginUserDto: LoginUserDto) {
   //   return this.authService.login(loginUserDto);

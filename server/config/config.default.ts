@@ -11,17 +11,21 @@ export default () =>
       port: 3000,
       // 数据库配置
       mysql: {
+        // host: '124.222.251.11',
+        // host: 'localhost',
         host: 'sh-cynosdbmysql-grp-jgarzx84.sql.tencentcdb.com',
-        port: 21954 || 3306,
+        port: 21954,
+        // host: '10.0.4.12',
+        // port: 3306,
         username: 'root',
-        password: 'kushuye777',
+        password: 'Kushuye777:',
         database: 'sms-db',
         synchronize: false,
       },
     },
-    {
-      local: configLocal,
-      pord: configProd,
-      unittest: configUnittest,
-    }[process.env.FM_SERVER_ENV](),
+    // {
+    //   local: configLocal,
+    //   pord: configProd,
+    //   unittest: configUnittest,
+    // }[process.env.FM_SERVER_ENV](),
   );

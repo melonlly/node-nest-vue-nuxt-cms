@@ -15,15 +15,15 @@
           </h3>
           <!-- <lang-select class="set-language" /> -->
         </div>
-        <el-form-item prop="username">
+        <el-form-item prop="name">
           <span class="svg-container">
             <svg-icon icon-class="user" />
           </span>
           <el-input
-            ref="username"
-            v-model="loginForm.username"
-            :placeholder="$t('login.username')"
-            name="username"
+            ref="name"
+            v-model="loginForm.name"
+            :placeholder="$t('login.name')"
+            name="name"
             type="text"
             tabindex="1"
             autocomplete="on"
@@ -72,12 +72,12 @@
 
         <!-- <div style="position:relative">
           <div class="tips">
-            <span>{{ $t('login.username') }} : admin</span>
+            <span>{{ $t('login.name') }} : admin</span>
             <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
           </div>
           <div class="tips">
             <span style="margin-right:18px;">
-              {{ $t('login.username') }} : editor
+              {{ $t('login.name') }} : editor
             </span>
             <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
           </div>
@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validName } from '@/utils/validate'
 // import LangSelect from '@/components/LangSelect'
 import SocialSign from './components/SocialSignin'
 // import errGif from '@/assets/401_images/401.gif'
@@ -108,8 +108,8 @@ export default {
   name: 'Login',
   components: { SocialSign },
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+    const validatename = (rule, value, callback) => {
+      if (!validName(value)) {
         callback(new Error('Please enter the correct user name'))
       } else {
         callback()
@@ -124,12 +124,12 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin999',
-        password: 'admin999',
+        name: '',
+        password: '',
       },
       loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername },
+        name: [
+          { required: true, trigger: 'blur', validator: validatename },
         ],
         password: [
           { required: true, trigger: 'blur', validator: validatePassword },
@@ -159,8 +159,8 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
+    if (this.loginForm.name === '') {
+      this.$refs.name.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }

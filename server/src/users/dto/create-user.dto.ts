@@ -2,33 +2,23 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class CreateUserDto {
   id: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  name: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
   password: string;
-
-  @ApiProperty()
-  @IsString()
+  recruit_id: string;
+  status: string;
+  name: string;
+  sex: string;
+  nation: string;
+  politics: string;
+  card_type: string;
+  card_no: string;
+  base: string;
+  base_phone: string;
+  born: string;
+  phone: string;
+  address: string;
+  postcode: string;
+  email: string;
   avatar: string;
-
-  @ApiProperty()
-  roles: string[];
-
-  @ApiProperty()
-  intro: string;
-
-  @ApiProperty()
-  @IsBoolean()
-  status: boolean;
-
-  @ApiProperty()
   createdAt: Date;
-
   updatedAt: Date;
 }

@@ -3,11 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { ProductsModule } from './products/product.module';
-import { ProductCategoriesModule } from './product-categories/product-categories.module';
-import { AboutModule } from './about/about.module';
-import { HomeModule } from './home/home.module';
-import { BannerModule } from './banner/banner.module';
+import { RecruitModule } from './recruit/recruit.module';
 import { UploadModule } from './upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -53,12 +49,8 @@ import configDefault from '../config/config.default';
     Log4jsModule.forRoot(),
     // 业务模块...
     UsersModule,
-    // ProductsModule,
-    // ProductCategoriesModule,
-    // AboutModule,
-    // HomeModule,
-    // BannerModule,
-    // UploadModule,
+    RecruitModule,
+    UploadModule,
     AuthModule,
   ],
   controllers: [AppController],

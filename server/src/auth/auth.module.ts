@@ -4,7 +4,6 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { jwtConstants } from '../libs/lib';
 import { JwtStrategyUser } from './strategies/jwt.strategy';
-import { LocalStrategyUser } from './strategies/local.strategy';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 
@@ -17,7 +16,7 @@ import { UsersModule } from '../users/users.module';
     }),
     UsersModule,
   ],
-  providers: [AuthService, LocalStrategyUser, JwtStrategyUser],
+  providers: [AuthService, JwtStrategyUser],
   exports: [AuthService],
   controllers: [AuthController],
 })

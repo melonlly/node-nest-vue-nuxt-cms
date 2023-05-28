@@ -26,3 +26,8 @@ export const Log = (params = {}) => {
     name,
   );
 };
+
+export const logger = (str) => {
+  const logger = new Logger();
+  logger.log(str);
+};

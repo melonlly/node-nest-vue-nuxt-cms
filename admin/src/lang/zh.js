@@ -123,7 +123,7 @@ export default {
   login: {
     title: '系统登录',
     logIn: '登录',
-    username: '账号',
+    name: '账号',
     password: '密码',
     any: '随便填',
     thirdparty: '第三方登录',
@@ -187,7 +187,7 @@ export default {
     delete: '删除',
     cancel: '取 消',
     confirm: '确 定',
-    username: '用户名',
+    name: '用户名',
     updatedAt: '更新时间',
     roles: '权限',
     title: '标题',

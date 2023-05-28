@@ -6,6 +6,7 @@ import { Repository, Like, Raw, In } from 'typeorm';
 import { cryptoString } from '../libs/lib';
 import * as generator from 'generate-password';
 import { RemoveUserDto } from './dto/remove-user.dto';
+import { LoginUserDto } from 'src/auth/dto/login-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -86,7 +87,7 @@ export class UsersService {
 
     params = Object.assign(
       {
-        select: ['id', 'name', 'updatedAt', 'status'],
+        select: ['id', 'name'],
       },
       params,
       {
@@ -176,5 +177,18 @@ export class UsersService {
   // 数量
   async getCount() {
     return await this.usersRepository.count();
+  }
+
+  // 根据 pwd 查询用户
+  async findOneByPwd(loginUser: LoginUserDto): Promise<any> {
+    const { name, password } = loginUser;
+    loginUser.password = cryptoString(password);
+    const user = await this.usersRepository.findOne({
+      where: {
+        name,
+        password: loginUser.password,
+      },
+    });
+    return user;
   }
 }

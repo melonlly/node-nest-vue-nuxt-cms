@@ -70,14 +70,14 @@ export class UsersController {
   }
 
   // 列表
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuardUser)
   @Get()
   @ApiOperation({ summary: '列表' })
   async findAll(@Query() query: FindUserDto): Promise<User> {
     return await this.usersService.findAll(query);
   }
 
-  // @UseGuards(JwtAuthGuardUser)
+  @UseGuards(JwtAuthGuardUser)
   @Get('list')
   @ApiOperation({ summary: '列表' })
   async findAllFE(@Query() query: FindUserDto): Promise<User> {
@@ -85,10 +85,13 @@ export class UsersController {
   }
 
   // 根据 id 查找
+  @UseGuards(JwtAuthGuardUser)
   @Get(':id')
   @ApiOperation({ summary: '根据 id 查找' })
   async findOneById(@Param() params: RetrieveUserDto): Promise<any> {
-    return await this.usersService.findOneById(params.id);
+    const user = await this.usersService.findOneById(params.id);
+    delete user.password;
+    return user;
   }
 
   // 根据 id 更新密码
@@ -114,6 +117,7 @@ export class UsersController {
   }
 
   // 根据 id 设置头像
+  @UseGuards(JwtAuthGuardUser)
   @Put('avatar/:id')
   @ApiOperation({ summary: '设置头像' })
   async updateAvatar(
@@ -127,6 +131,7 @@ export class UsersController {
   }
 
   // 数量
+  @UseGuards(JwtAuthGuardUser)
   @Get('list/count')
   @ApiOperation({ summary: '用户数量' })
   async getCount() {
