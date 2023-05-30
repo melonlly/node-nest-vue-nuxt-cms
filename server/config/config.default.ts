@@ -2,6 +2,8 @@ import configLocal from './config.local';
 import configProd from './config.prod';
 import configUnittest from './config.unittest';
 
+console.log(process.env.FM_SERVER_ENV);
+
 // 默认配置 - 会自动合并运行环境配置。
 export default () =>
   Object.assign(
@@ -23,9 +25,9 @@ export default () =>
         synchronize: false,
       },
     },
-    // {
-    //   local: configLocal,
-    //   pord: configProd,
-    //   unittest: configUnittest,
-    // }[process.env.FM_SERVER_ENV](),
+    {
+      local: configLocal,
+      prod: configProd,
+      unittest: configUnittest,
+    }[process.env.FM_SERVER_ENV](),
   );
