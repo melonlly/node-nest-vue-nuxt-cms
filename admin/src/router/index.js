@@ -10,9 +10,7 @@ import Layout from '@/layout'
 // import componentsRouter from './modules/components'
 // import nestedRouter from './modules/nested'
 
-import aboutRouter from './modules/about'
 import userRouter from './modules/user'
-import productRouter from './modules/product'
 import homeRouter from './modules/home'
 
 /**
@@ -80,9 +78,6 @@ export const constantRoutes = [
     children: [],
   },
   homeRouter,
-  // aboutRouter,
-
-  // productRouter,
   userRouter,
 ]
 

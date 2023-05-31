@@ -6,7 +6,7 @@
       ref="validateForm"
       label-width="100px"
     >
-      <el-form-item label="用户名" prop="name">
+      <el-form-item label="学生姓名" prop="name">
         <el-input
           v-model="formData.name"
           :disabled="type === 'update'"
@@ -68,7 +68,7 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入用户名称', trigger: 'blur' },
+          { required: true, message: '请输入学生姓名称', trigger: 'blur' },
           {
             min: 3,
             max: 20,

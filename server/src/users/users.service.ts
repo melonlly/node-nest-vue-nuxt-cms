@@ -86,9 +86,9 @@ export class UsersService {
     }
 
     params = Object.assign(
-      {
-        select: ['id', 'name'],
-      },
+      // {
+      //   select: ['id', 'name'],
+      // },
       params,
       {
         where: whereParams,

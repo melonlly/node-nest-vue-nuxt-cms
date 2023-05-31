@@ -5,7 +5,7 @@
         <el-input
           v-model="listQuery.keyword"
           clearable
-          placeholder="请输入内容"
+          placeholder="请输入学生姓名"
           @keyup.enter.native="onFilter"
         >
           <el-button
@@ -21,7 +21,7 @@
       <div class="filter-container__ctrl">
         <el-button
           class="filter-item"
-          style="margin-left: 10px;"
+          style="margin-left: 10px"
           type="primary"
           plain
           icon="el-icon-edit"
@@ -42,8 +42,16 @@
       @selection-change="handleSelectionChange"
       id="tableList"
     >
-      <el-table-column :label="$t('table.username')">
+      <el-table-column :label="$t('table.name')">
         <template slot-scope="{ row }"> {{ row.name }} </template>
+      </el-table-column>
+
+      <el-table-column label="证件号码">
+        <template slot-scope="{ row }"> {{ row.card_no }} </template>
+      </el-table-column>
+
+      <el-table-column label="学习中心">
+        <template slot-scope="{ row }"> {{ row.base }} </template>
       </el-table-column>
 
       <el-table-column
@@ -53,7 +61,7 @@
         align="center"
       >
         <template slot-scope="{ row }">
-          <span>{{ row.updatedAt | formatDate }}</span>
+          <span>{{ row.updatedAt }}</span>
         </template>
       </el-table-column>
 
@@ -62,11 +70,7 @@
         class-name="status-col"
         width="100"
       >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.status | statusFilter" size="mini">
-            {{ row.status ? '开启' : '停用' }}
-          </el-tag>
-        </template>
+        <template slot-scope="{ row }"> {{ row.status }} </template>
       </el-table-column>
       <el-table-column
         :label="$t('table.actions')"
@@ -154,7 +158,7 @@ export default {
     // 列表
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(res => {
+      fetchList(this.listQuery).then((res) => {
         const { total = 0, data = [] } = res
 
         this.list = data
@@ -186,7 +190,7 @@ export default {
     handleDelete(row) {
       let ids = []
       if (Array.isArray(row)) {
-        ids = row.map(v => v.id)
+        ids = row.map((v) => v.id)
       } else {
         ids.push(row.id)
       }
@@ -194,7 +198,7 @@ export default {
       this.handleClose(() => {
         remove({
           ids,
-        }).then(res => {
+        }).then((res) => {
           this.$notify({
             title: '成功',
             message: '删除成功',

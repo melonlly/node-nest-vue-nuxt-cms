@@ -98,10 +98,10 @@ export default {
     productCategoryUpdate: '更新产品分类',
 
     // admin
-    user: '管理员',
-    userListManagement: '管理员管理',
-    userCreate: '添加管理员',
-    userUpdate: '更新管理员',
+    user: '学生',
+    userListManagement: '学生管理',
+    userCreate: '添加学生',
+    userUpdate: '更新学生',
     changePassword: '更改密码',
   },
 
@@ -187,7 +187,7 @@ export default {
     delete: '删除',
     cancel: '取 消',
     confirm: '确 定',
-    name: '用户名',
+    name: '学生姓名',
     updatedAt: '更新时间',
     roles: '权限',
     title: '标题',
