@@ -17,8 +17,8 @@ export class UsersService {
 
   // 增加
   async create(createUserDto: CreateUserDto): Promise<any> {
-    const { name, password, createdAt } = createUserDto;
-    createUserDto.password = cryptoString(password);
+    const { name, password, card_no, createdAt } = createUserDto;
+    createUserDto.password = !password ? cryptoString(card_no) : cryptoString(password); // 默认证件号为初始密码
     createUserDto.createdAt = createdAt || new Date();
     createUserDto.updatedAt = new Date();
 

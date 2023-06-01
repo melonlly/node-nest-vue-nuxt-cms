@@ -179,7 +179,7 @@ export default {
     date: '时间',
     author: '作者',
     readings: '阅读数',
-    status: '状态',
+    status: '学习状态',
     actions: '操作',
     edit: '编辑',
     publish: '发布',
