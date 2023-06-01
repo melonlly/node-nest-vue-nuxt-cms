@@ -71,9 +71,9 @@ export class ExamService {
     }
 
     params = Object.assign(
-      {
-        select: ['id', 'period'],
-      },
+      // {
+      //   select: ['id', 'period'],
+      // },
       params,
       {
         where: whereParams,
@@ -85,7 +85,24 @@ export class ExamService {
       },
     );
 
-    const [data, total] = await this.examRepository.findAndCount(params);
+    const [data, total] = await this.examRepository
+      .createQueryBuilder('exam')
+      .leftJoinAndSelect('exam.recruit', 'recruit')
+      .leftJoinAndSelect('exam.user', 'user')
+      .select([
+        'exam.id',
+        'exam.period',
+        'exam.subject',
+        'exam.score',
+        'recruit.id',
+        'recruit.period',
+        'recruit.plan',
+        'user.id',
+        'user.name',
+        'user.card_no',
+      ])
+      .where(whereParams)
+      .getManyAndCount();
 
     return {
       total,
@@ -102,7 +119,24 @@ export class ExamService {
 
   // 根据ID查找
   async findOneById(id: string): Promise<any> {
-    return this.examRepository.findOne(id);
+    return this.examRepository
+      .createQueryBuilder('exam')
+      .leftJoinAndSelect('exam.recruit', 'recruit')
+      .leftJoinAndSelect('exam.user', 'user')
+      .select([
+        'exam.id',
+        'exam.period',
+        'exam.subject',
+        'exam.score',
+        'recruit.id',
+        'recruit.period',
+        'recruit.plan',
+        'user.id',
+        'user.name',
+        'user.card_no',
+      ])
+      .where({ id })
+      .getOne();
   }
 
   // 数量

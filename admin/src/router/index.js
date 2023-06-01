@@ -12,6 +12,8 @@ import Layout from '@/layout'
 
 import userRouter from './modules/user'
 import homeRouter from './modules/home'
+import recruitRouter from './modules/recruit'
+import examRouter from './modules/exam'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -78,7 +80,9 @@ export const constantRoutes = [
     children: [],
   },
   homeRouter,
+  recruitRouter,
   userRouter,
+  examRouter
 ]
 
 /**

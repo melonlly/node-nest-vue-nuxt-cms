@@ -125,6 +125,20 @@ export class UsersService {
     };
   }
 
+  // 查询所有用户
+  async findAllUsers(query: any): Promise<any> {
+    const [data, total] = await this.usersRepository.findAndCount({
+      order: {
+        updatedAt: 'DESC',
+      },
+    });
+
+    return {
+      total,
+      data,
+    };
+  }
+
   // 根据用户名查找
   async findOneByName(username: string): Promise<any> {
     return this.usersRepository.findOne({

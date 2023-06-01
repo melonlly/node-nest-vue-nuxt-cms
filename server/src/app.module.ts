@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { RecruitModule } from './recruit/recruit.module';
+import { ExamModule } from './exam/exam.module';
 import { UploadModule } from './upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -50,6 +51,7 @@ import configDefault from '../config/config.default';
     // 业务模块...
     UsersModule,
     RecruitModule,
+    ExamModule,
     UploadModule,
     AuthModule,
   ],

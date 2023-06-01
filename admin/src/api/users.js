@@ -8,6 +8,14 @@ export function fetchList(query) {
   })
 }
 
+export function fetchAll(query) {
+  return request({
+    url: '/users/all',
+    method: 'get',
+    params: query,
+  })
+}
+
 export function remove(data) {
   return request({
     url: '/users',

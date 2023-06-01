@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/recruit',
+    url: '/exam',
     method: 'get',
     params: query,
   })
@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function remove(data) {
   return request({
-    url: '/recruit',
+    url: '/exam',
     method: 'delete',
     data,
   })
@@ -18,14 +18,14 @@ export function remove(data) {
 
 export function getDetail(id) {
   return request({
-    url: '/recruit/' + id,
+    url: '/exam/' + id,
     method: 'get',
   })
 }
 
 export function create(data) {
   return request({
-    url: '/recruit',
+    url: '/exam',
     method: 'post',
     data,
   })
@@ -33,7 +33,7 @@ export function create(data) {
 
 export function update(data) {
   return request({
-    url: '/recruit/' + data.id,
+    url: '/exam/' + data.id,
     method: 'put',
     data,
   })
