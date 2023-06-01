@@ -7,6 +7,8 @@ import { cryptoString } from '../libs/lib';
 import * as generator from 'generate-password';
 import { RemoveUserDto } from './dto/remove-user.dto';
 import { LoginUserDto } from 'src/auth/dto/login-user.dto';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class UsersService {
@@ -17,10 +19,19 @@ export class UsersService {
 
   // 增加
   async create(createUserDto: CreateUserDto): Promise<any> {
-    const { name, password, card_no, createdAt } = createUserDto;
-    createUserDto.password = !password ? cryptoString(card_no) : cryptoString(password); // 默认证件号为初始密码
+    const { name, password, card_no, avatar, createdAt } = createUserDto;
+    createUserDto.password = !password
+      ? cryptoString(card_no)
+      : cryptoString(password); // 默认证件号为初始密码
     createUserDto.createdAt = createdAt || new Date();
     createUserDto.updatedAt = new Date();
+
+    // 重命名 avatar，默认名称：学生姓名-证件号
+    createUserDto.avatar = this.renameFile(
+      avatar,
+      `${name}-${card_no}.${path.extname(avatar)}`,
+    );
+    console.log(createUserDto.avatar);
 
     delete createUserDto.id;
 
@@ -50,11 +61,17 @@ export class UsersService {
   async update(updateUserData): Promise<any> {
     const { id, updateUserDto } = updateUserData;
     updateUserDto.updatedAt = new Date();
-    const { name } = updateUserDto;
+
+    // 重命名 avatar，默认名称：学生姓名-证件号
+    updateUserDto.avatar = this.renameFile(
+      updateUserDto.avatar,
+      `${updateUserDto.name}-${updateUserDto.card_no}`,
+    );
+    console.log(updateUserDto.avatar);
 
     const isExist = await this.usersRepository.count({
       where: {
-        name,
+        name: updateUserDto.name,
       },
     });
     if (isExist > 1) {
@@ -190,5 +207,13 @@ export class UsersService {
       },
     });
     return user;
+  }
+
+  renameFile(filePath: string, newFileName: string): string {
+    const directory = path.dirname(filePath);
+    const extension = path.extname(filePath);
+    const newFilePath = path.join(directory, `${newFileName}${extension}`);
+    fs.renameSync(filePath, newFilePath);
+    return newFilePath;
   }
 }

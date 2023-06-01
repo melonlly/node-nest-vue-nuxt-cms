@@ -15,7 +15,7 @@ import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { JwtAuthGuardUser } from 'src/auth/guards/jwt-auth.guard';
 import Jimp from 'jimp';
 const jimp = require('jimp');
-import { Log } from 'src/libs/utils';
+import { Log, logger } from 'src/libs/utils';
 
 const { NODE_ENV } = process.env;
 const baseHost = baseHosts[NODE_ENV] || {
@@ -35,7 +35,7 @@ export class UploadController {
         destination: `./${baseHost.uploadPath}uploads/`,
         filename: (_req, file, cb) => {
           file = file.upload ? file.upload : file;
-          // console.log('fiel', file, _req)
+          // console.log('file', file, _req)
           return cb(
             null,
             uid(32) + Date.now() + path.extname(file.originalname),
@@ -68,19 +68,19 @@ export class UploadController {
     upload.url = path.replace(baseHost.uploadPath, baseHost.baseHost);
     upload.fileName = filename;
 
-    if (mimetype.includes('image')) {
-      // 图片上传增加水印功能
-      const text = baseHost.domain;
-      jimp.read(path).then((image) => {
-        const { width, height } = image.bitmap;
-        console.log(width, height);
-        jimp.loadFont(jimp.FONT_SANS_32_BLACK).then((font) => {
-          image
-            .print(font, width - text.length * 20, height - 50, text)
-            .write(path);
-        });
-      });
-    }
+    // if (mimetype.includes('image')) {
+    //   // 图片上传增加水印功能
+    //   const text = baseHost.domain;
+    //   jimp.read(path).then((image) => {
+    //     const { width, height } = image.bitmap;
+    //     console.log(width, height);
+    //     jimp.loadFont(jimp.FONT_SANS_32_BLACK).then((font) => {
+    //       image
+    //         .print(font, width - text.length * 20, height - 50, text)
+    //         .write(path);
+    //     });
+    //   });
+    // }
 
     return upload;
   }

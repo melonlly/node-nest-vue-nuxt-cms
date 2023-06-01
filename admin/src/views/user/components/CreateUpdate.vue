@@ -17,6 +17,7 @@
         <el-select
           v-model="formData.recruit_id"
           placeholder="请选择所属招生计划"
+          style="width: 100%"
         >
           <el-option
             v-for="item in recruitList"
@@ -113,6 +114,7 @@ import { config } from '../config'
 import { getDetail, create, update } from '@/api/users'
 import { fetchList } from '@/api/recruit'
 import { getToken } from '@/utils/auth'
+import { baseApi, baseHost } from '@/utils'
 
 const { routePath } = config
 const token = getToken()
@@ -141,6 +143,9 @@ export default {
       rules: {
         name: [{ required: true, message: '请输入学生姓名', trigger: 'blur' }],
         card_no: [{ required: true, message: '请输入证件号', trigger: 'blur' }],
+        recruit_id: [
+          { required: true, message: '请选择所属招生计划', trigger: 'blur' },
+        ],
       },
 
       recruitList: [], // 招生计划列表
@@ -245,11 +250,16 @@ export default {
       getDetail(this.querys.id).then((res) => {
         this.loading = false
 
-        // const { avatar } = res
-        // this.uploadFile.list.push({
-        //   name: avatar,
-        //   url: baseHost + avatar.replace('public/', ''),
-        // })
+        const { avatar } = res
+        this.uploadFile.list.push({
+          name: avatar,
+          url:
+            baseHost +
+            avatar.replace(
+              avatar.indexOf(`\\`) > -1 ? `public\\` : 'public/',
+              ''
+            ),
+        })
 
         this.formData = res
       })
