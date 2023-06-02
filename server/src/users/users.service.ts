@@ -21,16 +21,13 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<any> {
     const { name, password, card_no, avatar, createdAt } = createUserDto;
     createUserDto.password = !password
-      ? cryptoString(card_no)
+      ? cryptoString('Yc-123456')
       : cryptoString(password); // 默认证件号为初始密码
     createUserDto.createdAt = createdAt || new Date();
     createUserDto.updatedAt = new Date();
 
     // 重命名 avatar，默认名称：学生姓名-证件号
-    createUserDto.avatar = this.renameFile(
-      avatar,
-      `${name}-${card_no}.${path.extname(avatar)}`,
-    );
+    createUserDto.avatar = this.renameFile(avatar, `${card_no}`);
     console.log(createUserDto.avatar);
 
     delete createUserDto.id;
@@ -65,7 +62,7 @@ export class UsersService {
     // 重命名 avatar，默认名称：学生姓名-证件号
     updateUserDto.avatar = this.renameFile(
       updateUserDto.avatar,
-      `${updateUserDto.name}-${updateUserDto.card_no}`,
+      `${updateUserDto.card_no}`,
     );
     console.log(updateUserDto.avatar);
 
@@ -216,7 +213,8 @@ export class UsersService {
     loginUser.password = cryptoString(password);
     const user = await this.usersRepository.findOne({
       where: {
-        name,
+        // name,
+        card_no: name, // 登录账号为证件号
         password: loginUser.password,
       },
     });

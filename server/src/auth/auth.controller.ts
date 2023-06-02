@@ -16,6 +16,7 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: '用户登录' })
   async login(@Body() loginUserDto: LoginUserDto, @Request() req) {
+    // 登录账号为证件号
     loginUserDto.name = decodeURIComponent(loginUserDto.name);
     console.log('user auth ctrl ', loginUserDto.name);
     const user = await this.userService.findOneByPwd(loginUserDto);
