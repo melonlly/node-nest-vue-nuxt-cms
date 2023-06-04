@@ -29,6 +29,26 @@
         >
           {{ $t('table.add') }}
         </el-button>
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px"
+          type="primary"
+          plain
+          icon="el-icon-upload"
+          @click="handleCreate"
+        >
+          导入学生数据
+        </el-button>
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px"
+          type="primary"
+          plain
+          icon="el-icon-upload"
+          @click="handleCreate"
+        >
+          导入学生照片
+        </el-button>
       </div>
     </div>
     <el-table
