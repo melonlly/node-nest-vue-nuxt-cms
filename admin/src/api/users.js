@@ -69,3 +69,11 @@ export function nameIsExists(username) {
     method: 'get',
   })
 }
+
+export function importUsers(data) {
+  return request({
+    url: '/upload/users',
+    method: 'post',
+    data,
+  })
+}

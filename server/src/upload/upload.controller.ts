@@ -64,7 +64,7 @@ export class UploadController {
   }
 
   // 上传学生数据（excel）
-  @Post()
+  @Post("users")
   @UseInterceptors(
     FileInterceptor('upload', {
       storage: diskStorage({
@@ -97,7 +97,7 @@ export class UploadController {
     const { filename, path } = upload;
     console.log(upload);
     console.log(body);
-    
+
     return upload;
   }
 }
