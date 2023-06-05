@@ -35,7 +35,7 @@
           type="primary"
           plain
           icon="el-icon-upload"
-          @click="handleCreate"
+          @click="importStuData"
         >
           导入学生数据
         </el-button>
@@ -162,6 +162,7 @@ export default {
       },
       downloadLoading: false,
       selectedRows: [],
+      importModal: false,
     }
   },
   watch: {
@@ -248,6 +249,10 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
+
+    importStuData() {
+      this.importModal = true
+    }
   },
 }
 </script>
