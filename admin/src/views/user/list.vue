@@ -39,7 +39,7 @@
         >
           导入学生数据
         </el-button>
-        <el-button
+        <!-- <el-button
           class="filter-item"
           style="margin-left: 10px"
           type="primary"
@@ -48,7 +48,7 @@
           @click="handleCreate"
         >
           导入学生照片
-        </el-button>
+        </el-button> -->
       </div>
     </div>
     <el-table
@@ -121,6 +121,7 @@
       @pagination="getList"
     />
     <el-dialog
+      v-loading="loading"
       :visible="uploadUsersModal"
       title="上传学生数据"
       :before-close="handleClose"
@@ -226,6 +227,7 @@ export default {
       uploadHeaders: {
         Authorization,
       },
+      loading: false,
     }
   },
   watch: {
@@ -359,6 +361,7 @@ export default {
       console.log('onUploadExceed')
     },
     submitUpload() {
+      this.loading = true
       const form = new FormData()
       form.append('file', this.$refs.upload.uploadFiles[0].raw)
       form.append('recruit_id', this.form.recruit_id)
@@ -371,6 +374,7 @@ export default {
           console.log('提交失败', error)
         })
         .finally(() => {
+          this.loading = false
           this.uploadUsersModal = false
           this.form.recruit_id = ''
           this.$refs.upload.uploadFiles = []

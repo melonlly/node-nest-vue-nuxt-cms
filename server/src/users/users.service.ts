@@ -148,6 +148,13 @@ export class UsersService {
     return this.usersRepository.findOne(id);
   }
 
+  // 根据ID查找
+  async findOneByCardNo(card_no: string): Promise<any> {
+    return await this.usersRepository.findOne({
+      card_no,
+    });
+  }
+
   // 更新密码
   async updatePassword(data): Promise<any> {
     const { id, body } = data;
@@ -227,5 +234,35 @@ export class UsersService {
     const newFilePath = path.join(directory, `${newFileName}${extension}`);
     fs.renameSync(filePath, newFilePath);
     return newFilePath;
+  }
+
+  // 批量插入
+  /*
+    {
+      status: '录取状态',
+      name: '姓名',
+      card_no: '身份证号码',
+      sex: '性别',
+      nation: '民族',
+      politics: '政治面貌',
+      base: '中心',
+      base_phone: '学习中心电话',
+      born: '出生日期',
+      phone: '即时通讯',
+      address: '通讯地址',
+      postcode: '邮政编码',
+      email: 'Email',
+    };
+  */
+  async insertUsers(users: User[]): Promise<any> {
+    return await users.forEach(async (user) => {
+      const existingUser = await this.findOneByCardNo(user.card_no);
+      if (existingUser && existingUser.id) {
+        Object.assign(existingUser, user);
+        this.usersRepository.save(existingUser);
+      } else {
+        this.usersRepository.insert(user);
+      }
+    });
   }
 }
