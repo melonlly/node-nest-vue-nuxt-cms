@@ -38,3 +38,11 @@ export function update(data) {
     data,
   })
 }
+
+export function importExams(data) {
+  return request({
+    url: '/upload/exams',
+    method: 'post',
+    data,
+  })
+}
