@@ -28,11 +28,18 @@ import { mapGetters } from "vuex";
 import Logo from "./Logo";
 import SidebarItem from "./SidebarItem";
 import variables from "@/styles/variables.scss";
+import { constantRoutes } from "@/router";
 
 export default {
   components: { SidebarItem, Logo },
+  data() {
+    return {
+      permission_routes: constantRoutes
+    }
+  },
   computed: {
-    ...mapGetters(["permission_routes", "sidebar"]),
+    // ...mapGetters(["permission_routes", "sidebar"]),
+    ...mapGetters(["sidebar"]),
     activeMenu() {
       const route = this.$route;
       const { meta, path } = route;
@@ -51,6 +58,10 @@ export default {
     isCollapse() {
       return !this.sidebar.opened;
     }
+  },
+  mounted() {
+    console.log(this.$store);
+    console.log(constantRoutes);
   }
 };
 </script>

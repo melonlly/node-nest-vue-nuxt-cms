@@ -1,32 +1,71 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <div class="filter-container__search"></div>
+      <div class="filter-container__search">
+        <el-input
+          v-model="listQuery.keyword"
+          clearable
+          placeholder="请输入学期"
+          @keyup.enter.native="onFilter"
+        >
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            type="primary"
+            @click="onFilter"
+            @keyup.enter.native="onFilter"
+            >搜索</el-button
+          >
+        </el-input>
+      </div>
       <div class="filter-container__ctrl">
         <el-button
           class="filter-item"
-          style="margin-left: 10px;"
+          style="margin-left: 10px"
           type="primary"
           plain
           icon="el-icon-edit"
           @click="handleCreate"
         >
-          添加
+          {{ $t('table.add') }}
         </el-button>
       </div>
     </div>
     <el-table
       :key="tableKey"
       v-loading="listLoading"
+      :data="list"
       border
       fit
       highlight-current-row
       stripe
-      :data="list"
+      @selection-change="handleSelectionChange"
       id="tableList"
     >
-      <el-table-column label="分类">
-        <template slot-scope="{ row }"> {{ row.name }} </template>
+      <el-table-column label="所属招生计划">
+        <template slot-scope="{ row }">
+          {{ row.recruit ? row.recruit.period : '' }}-{{
+            row.recruit ? row.recruit.plan : ''
+          }}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="学期">
+        <template slot-scope="{ row }"> {{ row.period }} </template>
+      </el-table-column>
+
+      <el-table-column label="学生">
+        <template slot-scope="{ row }">
+          {{ row.user ? row.user.name : '' }}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="学科">
+        <template slot-scope="{ row }"> {{ row.subject }} </template>
+      </el-table-column>
+
+      <el-table-column label="分数">
+        <template slot-scope="{ row }"> {{ row.score }} </template>
       </el-table-column>
 
       <el-table-column
@@ -36,21 +75,10 @@
         align="center"
       >
         <template slot-scope="{ row }">
-          <span>{{ row.updatedAt | formatDate }}</span>
+          <span>{{ row.updatedAt }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column
-        :label="$t('table.status')"
-        class-name="status-col"
-        width="100"
-      >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.status | statusFilter" size="mini">
-            {{ row.status ? '开启' : '停用' }}
-          </el-tag>
-        </template>
-      </el-table-column>
       <el-table-column
         :label="$t('table.actions')"
         align="center"
@@ -61,28 +89,37 @@
             {{ $t('table.edit') }}
           </el-button>
 
-          <el-button
-            v-if="row.status != 'deleted'"
-            size="mini"
-            type="danger"
-            plain
-            @click="handleDelete(row)"
-          >
+          <el-button size="mini" type="danger" plain @click="handleDelete(row)">
             {{ $t('table.delete') }}
           </el-button>
         </template>
       </el-table-column>
     </el-table>
+    <div class="el-table__footer"></div>
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
   </div>
 </template>
 
 <script>
 import { config } from './config'
-import { fetchList, remove } from '@/api/product-category'
+import { fetchList, remove } from '@/api/exam'
 import { formatDate } from '@/utils'
+import Pagination from '@/components/Pagination'
+
+const { routePath } = config
 
 export default {
-  name: 'ProductCategoryList',
+  name: 'examList',
+  components: {
+    Pagination,
+  },
+
   filters: {
     statusFilter(status) {
       return status ? 'success' : 'info'
@@ -124,10 +161,11 @@ export default {
     // 列表
     getList() {
       this.listLoading = true
-      fetchList().then(res => {
-        const { data = [] } = res
+      fetchList(this.listQuery).then((res) => {
+        const { total = 0, data = [] } = res
 
         this.list = data
+        this.total = total
 
         this.listLoading = false
       })
@@ -135,23 +173,19 @@ export default {
 
     // 添加事件
     handleCreate() {
-      this.$router.push(`${config.routePath}create`)
+      this.$router.push(`${routePath}create`)
     },
 
     // 编辑信息
     handleUpdate(row) {
-      console.log('config.routePath', config.routePath)
-      this.$router.push({
-        path: `${config.routePath}update`,
-        query: { id: row.id },
-      })
+      this.$router.push({ path: `${routePath}update`, query: { id: row.id } })
     },
 
     // 删除
     handleDelete(row) {
       let ids = []
       if (Array.isArray(row)) {
-        ids = row.map(v => v.id)
+        ids = row.map((v) => v.id)
       } else {
         ids.push(row.id)
       }
@@ -159,7 +193,7 @@ export default {
       this.handleClose(() => {
         remove({
           ids,
-        }).then(() => {
+        }).then((res) => {
           this.$notify({
             title: '成功',
             message: '删除成功',
@@ -169,6 +203,10 @@ export default {
           this.getList()
         })
       })
+    },
+
+    handleSelectionChange(val) {
+      this.selectedRows = val
     },
 
     // 删除提醒

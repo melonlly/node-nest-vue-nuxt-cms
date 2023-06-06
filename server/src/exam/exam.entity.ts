@@ -1,19 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Recruit } from 'src/recruit/recruit.entity';
+import { User } from 'src/users/users.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('exam')
 export class Exam {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    nullable: false,
-  })
-  recruit_id: string;
+  @ManyToOne(() => Recruit)
+  @JoinColumn({ name: 'recruitId' })
+  recruit: Recruit;
 
-  @Column({
-    nullable: false,
-  })
-  user_id: string;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'userId' })
+  user: User;
 
   @Column({
     nullable: true,

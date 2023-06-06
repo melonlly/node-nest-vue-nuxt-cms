@@ -84,9 +84,9 @@ export class RecruitService {
     }
 
     params = Object.assign(
-      {
-        select: ['id', 'period'],
-      },
+      // {
+      //   select: ['id', 'period'],
+      // },
       params,
       {
         where: whereParams,

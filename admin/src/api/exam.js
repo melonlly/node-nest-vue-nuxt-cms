@@ -1,9 +1,8 @@
 import request from '@/utils/request'
-const urlPath = '/about/'
 
 export function fetchList(query) {
   return request({
-    url: `${urlPath}`,
+    url: '/exam',
     method: 'get',
     params: query,
   })
@@ -11,7 +10,7 @@ export function fetchList(query) {
 
 export function remove(data) {
   return request({
-    url: `${urlPath}`,
+    url: '/exam',
     method: 'delete',
     data,
   })
@@ -19,14 +18,14 @@ export function remove(data) {
 
 export function getDetail(id) {
   return request({
-    url: `${urlPath + id}`,
+    url: '/exam/' + id,
     method: 'get',
   })
 }
 
 export function create(data) {
   return request({
-    url: `${urlPath}`,
+    url: '/exam',
     method: 'post',
     data,
   })
@@ -34,7 +33,7 @@ export function create(data) {
 
 export function update(data) {
   return request({
-    url: `${urlPath + data.id}`,
+    url: '/exam/' + data.id,
     method: 'put',
     data,
   })

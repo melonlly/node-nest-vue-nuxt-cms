@@ -7,6 +7,8 @@ import { cryptoString } from '../libs/lib';
 import * as generator from 'generate-password';
 import { RemoveUserDto } from './dto/remove-user.dto';
 import { LoginUserDto } from 'src/auth/dto/login-user.dto';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class UsersService {
@@ -17,10 +19,16 @@ export class UsersService {
 
   // 增加
   async create(createUserDto: CreateUserDto): Promise<any> {
-    const { name, password, createdAt } = createUserDto;
-    createUserDto.password = cryptoString(password);
+    const { name, password, card_no, avatar, createdAt } = createUserDto;
+    createUserDto.password = !password
+      ? cryptoString('Yc-123456')
+      : cryptoString(password); // 默认证件号为初始密码
     createUserDto.createdAt = createdAt || new Date();
     createUserDto.updatedAt = new Date();
+
+    // 重命名 avatar，默认名称：学生姓名-证件号
+    createUserDto.avatar = this.renameFile(avatar, `${card_no}`);
+    console.log(createUserDto.avatar);
 
     delete createUserDto.id;
 
@@ -50,11 +58,17 @@ export class UsersService {
   async update(updateUserData): Promise<any> {
     const { id, updateUserDto } = updateUserData;
     updateUserDto.updatedAt = new Date();
-    const { name } = updateUserDto;
+
+    // 重命名 avatar，默认名称：学生姓名-证件号
+    updateUserDto.avatar = this.renameFile(
+      updateUserDto.avatar,
+      `${updateUserDto.card_no}`,
+    );
+    console.log(updateUserDto.avatar);
 
     const isExist = await this.usersRepository.count({
       where: {
-        name,
+        name: updateUserDto.name,
       },
     });
     if (isExist > 1) {
@@ -86,9 +100,9 @@ export class UsersService {
     }
 
     params = Object.assign(
-      {
-        select: ['id', 'name'],
-      },
+      // {
+      //   select: ['id', 'name'],
+      // },
       params,
       {
         where: whereParams,
@@ -108,6 +122,20 @@ export class UsersService {
     };
   }
 
+  // 查询所有用户
+  async findAllUsers(query: any): Promise<any> {
+    const [data, total] = await this.usersRepository.findAndCount({
+      order: {
+        updatedAt: 'DESC',
+      },
+    });
+
+    return {
+      total,
+      data,
+    };
+  }
+
   // 根据用户名查找
   async findOneByName(username: string): Promise<any> {
     return this.usersRepository.findOne({
@@ -118,6 +146,13 @@ export class UsersService {
   // 根据ID查找
   async findOneById(id: string): Promise<any> {
     return this.usersRepository.findOne(id);
+  }
+
+  // 根据ID查找
+  async findOneByCardNo(card_no: string): Promise<any> {
+    return await this.usersRepository.findOne({
+      card_no,
+    });
   }
 
   // 更新密码
@@ -185,10 +220,49 @@ export class UsersService {
     loginUser.password = cryptoString(password);
     const user = await this.usersRepository.findOne({
       where: {
-        name,
+        // name,
+        card_no: name, // 登录账号为证件号
         password: loginUser.password,
       },
     });
     return user;
+  }
+
+  renameFile(filePath: string, newFileName: string): string {
+    const directory = path.dirname(filePath);
+    const extension = path.extname(filePath);
+    const newFilePath = path.join(directory, `${newFileName}${extension}`);
+    fs.renameSync(filePath, newFilePath);
+    return newFilePath;
+  }
+
+  // 批量插入
+  /*
+    {
+      status: '录取状态',
+      name: '姓名',
+      card_no: '身份证号码',
+      sex: '性别',
+      nation: '民族',
+      politics: '政治面貌',
+      base: '中心',
+      base_phone: '学习中心电话',
+      born: '出生日期',
+      phone: '即时通讯',
+      address: '通讯地址',
+      postcode: '邮政编码',
+      email: 'Email',
+    };
+  */
+  async insertUsers(users: User[]): Promise<any> {
+    return await users.forEach(async (user) => {
+      const existingUser = await this.findOneByCardNo(user.card_no);
+      if (existingUser && existingUser.id) {
+        Object.assign(existingUser, user);
+        this.usersRepository.save(existingUser);
+      } else {
+        this.usersRepository.insert(user);
+      }
+    });
   }
 }

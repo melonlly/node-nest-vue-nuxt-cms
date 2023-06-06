@@ -5,7 +5,7 @@
         <el-input
           v-model="listQuery.keyword"
           clearable
-          placeholder="请输入内容"
+          placeholder="请输入招生时期"
           @keyup.enter.native="onFilter"
         >
           <el-button
@@ -42,19 +42,12 @@
       @selection-change="handleSelectionChange"
       id="tableList"
     >
-      <el-table-column type="selection" width="55"></el-table-column>
-
-      <el-table-column label="标题">
-        <template slot-scope="{ row }"> {{ row.name }} </template>
+      <el-table-column label="招生时期">
+        <template slot-scope="{ row }"> {{ row.period }} </template>
       </el-table-column>
 
-      <el-table-column label="图片" align="center">
-        <template slot-scope="{ row }">
-          <el-popover placement="right" width="230" trigger="hover">
-            <img :src="row.pic" style="width: 200px" />
-            <img :src="row.pic" slot="reference" style="width: 40px" />
-          </el-popover>
-        </template>
+      <el-table-column label="培养方案">
+        <template slot-scope="{ row }"> {{ row.plan }} </template>
       </el-table-column>
 
       <el-table-column
@@ -64,21 +57,10 @@
         align="center"
       >
         <template slot-scope="{ row }">
-          <span>{{ row.updatedAt | formatDate }}</span>
+          <span>{{ row.updatedAt }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column
-        :label="$t('table.status')"
-        class-name="status-col"
-        width="100"
-      >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.status | statusFilter" size="mini">
-            {{ row.status ? '开启' : '停用' }}
-          </el-tag>
-        </template>
-      </el-table-column>
       <el-table-column
         :label="$t('table.actions')"
         align="center"
@@ -89,27 +71,13 @@
             {{ $t('table.edit') }}
           </el-button>
 
-          <el-button
-            v-if="row.status != 'deleted'"
-            size="mini"
-            type="danger"
-            plain
-            @click="handleDelete(row)"
-          >
+          <el-button size="mini" type="danger" plain @click="handleDelete(row)">
             {{ $t('table.delete') }}
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <div class="el-table__footer">
-      <el-button
-        type="danger"
-        plain
-        :disabled="selectedRows.length <= 0"
-        @click="handleDelete(selectedRows)"
-        >删除选中
-      </el-button>
-    </div>
+    <div class="el-table__footer"></div>
     <pagination
       v-show="total > 0"
       :total="total"
@@ -122,13 +90,14 @@
 
 <script>
 import { config } from './config'
-import { fetchList, remove } from '@/api/banner'
+import { fetchList, remove } from '@/api/recruit'
+import { formatDate } from '@/utils'
+import Pagination from '@/components/Pagination'
 
-import { formatDate, baseHost } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+const { routePath } = config
 
 export default {
-  name: 'BannerList',
+  name: 'RecruitList',
   components: {
     Pagination,
   },
@@ -144,7 +113,7 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list: [],
+      list: null,
       total: 0,
       listLoading: true,
       listQuery: {
@@ -158,8 +127,6 @@ export default {
       },
       downloadLoading: false,
       selectedRows: [],
-
-      categoryList: {},
     }
   },
   watch: {
@@ -177,17 +144,10 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then((res) => {
-        const { data = [], total = 0 } = res
+        const { total = 0, data = [] } = res
 
+        this.list = data
         this.total = total
-
-        this.list = data.map((v) => {
-          let pic = v.pic
-          if (pic) {
-            v.pic = baseHost + pic.replace('public/', '')
-          }
-          return v
-        })
 
         this.listLoading = false
       })
@@ -195,15 +155,12 @@ export default {
 
     // 添加事件
     handleCreate() {
-      this.$router.push(`/home${config.routePath}create`)
+      this.$router.push(`${routePath}create`)
     },
 
     // 编辑信息
     handleUpdate(row) {
-      this.$router.push({
-        path: `/home${config.routePath}update`,
-        query: { id: row.id },
-      })
+      this.$router.push({ path: `${routePath}update`, query: { id: row.id } })
     },
 
     // 删除
@@ -218,12 +175,12 @@ export default {
       this.handleClose(() => {
         remove({
           ids,
-        }).then(() => {
+        }).then((res) => {
           this.$notify({
             title: '成功',
             message: '删除成功',
             type: 'success',
-            duration: 1000,
+            duration: 2000,
           })
           this.getList()
         })

@@ -3,14 +3,12 @@ const baseHosts = {
   development: {
     baseHost: 'http://localhost:3000/',
     uploadPath: 'public/',
-    domain: 'www.giibee.com',
   },
 
   // production
   production: {
-    baseHost: 'http://app.api',
+    baseHost: 'http://101.35.248.228:3000', // 应用公网地址
     uploadPath: 'public/',
-    domain: 'www.giibee.com',
   },
 };
 

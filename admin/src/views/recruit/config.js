@@ -1,3 +1,3 @@
 export const config = {
-  routePath: '/about/',
+  routePath: '/recruit/',
 }

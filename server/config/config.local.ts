@@ -1,10 +1,10 @@
 // 开发环境配置
 export default () => ({
   mysql: {
-    host: '124.222.251.11',
-    port: 21954 || 3306,
+    host: 'sh-cynosdbmysql-grp-jgarzx84.sql.tencentcdb.com',
+    port: 21954,
     username: 'root',
-    password: 'kushuye777',
+    password: 'Kushuye777:',
     database: 'sms-db',
     synchronize: false,
   },

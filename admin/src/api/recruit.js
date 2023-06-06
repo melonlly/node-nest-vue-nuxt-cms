@@ -1,9 +1,8 @@
 import request from '@/utils/request'
-const urlPath = '/product-categories/'
 
 export function fetchList(query) {
   return request({
-    url: `${urlPath}`,
+    url: '/recruit',
     method: 'get',
     params: query,
   })
@@ -11,7 +10,7 @@ export function fetchList(query) {
 
 export function remove(data) {
   return request({
-    url: `${urlPath}`,
+    url: '/recruit',
     method: 'delete',
     data,
   })
@@ -19,14 +18,14 @@ export function remove(data) {
 
 export function getDetail(id) {
   return request({
-    url: `${urlPath + id}`,
+    url: '/recruit/' + id,
     method: 'get',
   })
 }
 
 export function create(data) {
   return request({
-    url: `${urlPath}`,
+    url: '/recruit',
     method: 'post',
     data,
   })
@@ -34,16 +33,8 @@ export function create(data) {
 
 export function update(data) {
   return request({
-    url: `${urlPath + data.id}`,
+    url: '/recruit/' + data.id,
     method: 'put',
     data,
-  })
-}
-
-export function findByIds(ids) {
-  return request({
-    url: `${urlPath}find-by-ids`,
-    method: 'post',
-    ids,
   })
 }

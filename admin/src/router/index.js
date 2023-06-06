@@ -10,10 +10,10 @@ import Layout from '@/layout'
 // import componentsRouter from './modules/components'
 // import nestedRouter from './modules/nested'
 
-import aboutRouter from './modules/about'
 import userRouter from './modules/user'
-import productRouter from './modules/product'
 import homeRouter from './modules/home'
+import recruitRouter from './modules/recruit'
+import examRouter from './modules/exam'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -80,10 +80,9 @@ export const constantRoutes = [
     children: [],
   },
   homeRouter,
-  // aboutRouter,
-
-  // productRouter,
+  recruitRouter,
   userRouter,
+  examRouter
 ]
 
 /**

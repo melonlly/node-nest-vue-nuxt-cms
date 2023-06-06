@@ -8,6 +8,14 @@ export function fetchList(query) {
   })
 }
 
+export function fetchAll(query) {
+  return request({
+    url: '/users/all',
+    method: 'get',
+    params: query,
+  })
+}
+
 export function remove(data) {
   return request({
     url: '/users',
@@ -59,5 +67,13 @@ export function nameIsExists(username) {
   return request({
     url: '/users/username/' + username,
     method: 'get',
+  })
+}
+
+export function importUsers(data) {
+  return request({
+    url: '/upload/users',
+    method: 'post',
+    data,
   })
 }

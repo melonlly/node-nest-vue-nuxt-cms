@@ -7,11 +7,11 @@
 import CreateUpdate from "./components/CreateUpdate";
 
 export default {
-  name: "CreateAbout",
+  name: "UpdateUser",
   components: { CreateUpdate },
   data() {
     return {
-      type: "create"
+      type: "update"
     };
   }
 };

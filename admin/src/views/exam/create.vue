@@ -7,7 +7,7 @@
 import CreateUpdate from "./components/CreateUpdate";
 
 export default {
-  name: "CreateAbout",
+  name: "CreateUser",
   components: { CreateUpdate },
   data() {
     return {

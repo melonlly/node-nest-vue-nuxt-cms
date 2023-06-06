@@ -20,11 +20,17 @@ import { RemoveExamDto } from './dto/remove-exam.dto';
 import { RetrieveExamDto } from './dto/retrieve-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
 import { FindExamDto } from './dto/find-exam.dto';
+import { RecruitService } from 'src/recruit/recruit.service';
+import { UsersService } from 'src/users/users.service';
 
 @ApiTags('考试')
 @Controller('api/exam')
 export class ExamController {
-  constructor(private readonly examService: ExamService) {}
+  constructor(
+    private readonly examService: ExamService,
+    private readonly recruitService: RecruitService,
+    private readonly userService: UsersService,
+  ) {}
 
   // 获取用户信息
   @UseGuards(JwtAuthGuardUser)
@@ -39,6 +45,11 @@ export class ExamController {
   @Post()
   @ApiOperation({ summary: '增加' })
   async create(@Body() createExamDto: CreateExamDto): Promise<Exam> {
+    const { recruitId, userId } = createExamDto;
+    const recruit = await this.recruitService.findOneById(recruitId);
+    const user = await this.userService.findOneById(userId);
+    createExamDto.recruit = recruit;
+    createExamDto.user = user;
     return await this.examService.create(createExamDto);
   }
 
@@ -62,6 +73,11 @@ export class ExamController {
     @Param() params: RetrieveExamDto,
     @Body() updateExamDto: UpdateExamDto,
   ): Promise<any> {
+    const { recruitId, userId } = updateExamDto;
+    const recruit = await this.recruitService.findOneById(recruitId);
+    const user = await this.userService.findOneById(userId);
+    updateExamDto.recruit = recruit;
+    updateExamDto.user = user;
     return await this.examService.update({
       id: params.id,
       updateExamDto,

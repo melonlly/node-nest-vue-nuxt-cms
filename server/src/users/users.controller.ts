@@ -84,6 +84,13 @@ export class UsersController {
     return await this.usersService.findAll(query);
   }
 
+  @UseGuards(JwtAuthGuardUser)
+  @Get('all')
+  @ApiOperation({ summary: '查询全部' })
+  async findAllUsers(@Query() query: FindUserDto): Promise<User> {
+    return await this.usersService.findAllUsers(query);
+  }
+
   // 根据 id 查找
   @UseGuards(JwtAuthGuardUser)
   @Get(':id')

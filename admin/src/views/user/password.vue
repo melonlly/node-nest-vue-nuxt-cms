@@ -129,7 +129,7 @@ export default {
           this.loading = false
 
           this.$message({
-            message: '恭喜，操作成功',
+            message: '操作成功',
             type: 'success',
             duration: 1000,
           })
