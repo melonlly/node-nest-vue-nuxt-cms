@@ -218,6 +218,7 @@ export class UsersService {
   async findOneByPwd(loginUser: LoginUserDto): Promise<any> {
     const { name, password } = loginUser;
     loginUser.password = cryptoString(password);
+    console.log(loginUser.password)
     const user = await this.usersRepository.findOne({
       where: {
         // name,

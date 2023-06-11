@@ -251,14 +251,10 @@ export default {
         this.loading = false
 
         const { avatar } = res
+        console.log(avatar, avatar.replace('./public/', ''))
         this.uploadFile.list.push({
           name: avatar,
-          url:
-            baseHost +
-            avatar.replace(
-              avatar.indexOf(`\\`) > -1 ? `public\\` : 'public/',
-              ''
-            ),
+          url: avatar.replace('./public/', ''),
         })
 
         this.formData = res
