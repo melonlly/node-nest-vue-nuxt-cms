@@ -20,6 +20,14 @@ export class UploadService {
     const data = xlsx.utils.sheet_to_json(worksheet);
     return data;
   }
+  // 获取考试内容
+  getExamData(path: string): any[] {
+    const workbook = xlsx.readFile(path, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(worksheet);
+    return data;
+  }
   // 处理表格数据
   handleExcelData(excelData: any[], recruit_id: string): User[] {
     const users = [];

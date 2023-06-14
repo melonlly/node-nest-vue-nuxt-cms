@@ -15,8 +15,9 @@ import { baseHosts } from '../libs/config';
 import { JwtAuthGuardUser } from 'src/auth/guards/jwt-auth.guard';
 import { UploadService } from './upload.service';
 import { UsersService } from 'src/users/users.service';
-import * as AdmZip from 'adm-zip';
+import * as AdmZip from 'adm-zip-iconv';
 import { promises as fs } from 'fs';
+import * as fsEx from 'fs-extra';
 import * as iconvLite from 'iconv-lite';
 import { logger } from 'src/libs/utils';
 
@@ -110,6 +111,8 @@ export class UploadController {
     }),
   )
   async uploadExams(@UploadedFile() upload, @Body() body: any) {
+    console.log(`uploadExams`, upload);
+    
     const { filename, path } = upload;
     // console.log('upload', upload, upload.recruit_id);
     console.log('body', body, body.recruit_id, body.period);
@@ -119,39 +122,23 @@ export class UploadController {
     const timestamp = Date.now(); // 时间戳作为当前上传解压目录
 
     // 解压上传的文件
-    const zip = new AdmZip(path);
+    const zip = new AdmZip(path, 'GBK');
     const targetDirectory = `./${baseHost.uploadPath}exams/${timestamp}`;
 
     try {
       await fs.mkdir(targetDirectory, { recursive: true });
-
       zip.extractAllTo(targetDirectory, /*overwrite*/ true);
 
-      // zip.getEntries().forEach((entry) => {
-      //   console.log(
-      //     entry.entryName,
-      //     iconvLite.decode(Buffer.from(entry.entryName, 'binary'), 'GBK'),
-      //     entry.isDirectory,
-      //   );
+      const files = await fsEx.readdir(path.join(__dirname, targetDirectory));
+      logger(files);
+      files.forEach((file) => {
+        logger(file);
 
-      //   const rawName = entry.entryName;
-      //   const decodedName = iconvLite.decode(
-      //     Buffer.from(rawName, 'binary'),
-      //     'GBK',
-      //   ); // Replace 'GBK' with the correct encoding if necessary
-
-      //   const outputPath = `${targetDirectory}/${decodedName}`;
-      //   if (entry.isDirectory) {
-      //     fs.mkdir(outputPath, { recursive: true });
-      //   } else {
-      //     const data = entry.getData();
-      //     fs.writeFile(outputPath, data);
-      //   }
-      // });
-      // await fs.unlink(path);
+        const examData = this.uploadService.getExamData(file.path);
+        logger(examData);
+      });
     } catch (error) {
-      console.error('Error while extracting the ZIP file:', error);
-      // throw error
+      logger(error)
     }
 
     // const excelData = this.uploadService.getExcelData(path); // excel数据（第一个sheet)
