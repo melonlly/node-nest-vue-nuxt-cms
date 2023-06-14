@@ -124,22 +124,31 @@ export class UploadController {
 
     try {
       await fs.mkdir(targetDirectory, { recursive: true });
-      // zip.extractAllTo(targetDirectory, /*overwrite*/ true);
-      zip.getEntries().forEach((entry) => {
-        const rawName = entry.entryName;
-        const decodedName = iconvLite.decode(
-          Buffer.from(rawName, 'binary'),
-          'GBK',
-        ); // Replace 'GBK' with the correct encoding if necessary
-        const outputPath = `${targetDirectory}/${decodedName}`;
-        if (entry.isDirectory) {
-          fs.mkdir(outputPath, { recursive: true });
-        } else {
-          const data = entry.getData();
-          fs.writeFile(outputPath, data);
-        }
-      });
-      await fs.unlink(path);
+
+      zip.extractAllTo(targetDirectory, /*overwrite*/ true);
+
+      // zip.getEntries().forEach((entry) => {
+      //   console.log(
+      //     entry.entryName,
+      //     iconvLite.decode(Buffer.from(entry.entryName, 'binary'), 'GBK'),
+      //     entry.isDirectory,
+      //   );
+
+      //   const rawName = entry.entryName;
+      //   const decodedName = iconvLite.decode(
+      //     Buffer.from(rawName, 'binary'),
+      //     'GBK',
+      //   ); // Replace 'GBK' with the correct encoding if necessary
+
+      //   const outputPath = `${targetDirectory}/${decodedName}`;
+      //   if (entry.isDirectory) {
+      //     fs.mkdir(outputPath, { recursive: true });
+      //   } else {
+      //     const data = entry.getData();
+      //     fs.writeFile(outputPath, data);
+      //   }
+      // });
+      // await fs.unlink(path);
     } catch (error) {
       console.error('Error while extracting the ZIP file:', error);
       // throw error
