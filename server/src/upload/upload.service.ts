@@ -3,6 +3,9 @@ import { cryptoString } from '../libs/lib';
 import * as xlsx from 'xlsx';
 import { User } from 'src/users/users.entity';
 import { baseHosts } from 'src/libs/config';
+import { Exam } from 'src/exam/exam.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 const { NODE_ENV } = process.env;
 const baseHost = baseHosts[NODE_ENV] || {
@@ -12,17 +15,14 @@ const baseHost = baseHosts[NODE_ENV] || {
 
 @Injectable()
 export class UploadService {
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
+
   // 获取excel内容
   getExcelData(excelPath: string): any[] {
     const workbook = xlsx.readFile(excelPath, { type: 'buffer' });
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const data = xlsx.utils.sheet_to_json(worksheet);
-    return data;
-  }
-  // 获取考试内容
-  getExamData(path: string): any[] {
-    const workbook = xlsx.readFile(path, { type: 'buffer' });
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(worksheet);
@@ -59,5 +59,35 @@ export class UploadService {
       users.push(user);
     });
     return users;
+  }
+  // 获取考试内容
+  getExamData(path: string): any[] {
+    const workbook = xlsx.readFile(path, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(worksheet);
+    return data;
+  }
+  // 处理考试数据
+  async handleExamData(
+    examData: any[],
+    recruit_id: string,
+    period: string,
+  ): Promise<Exam[]> {
+    const username = String(Object.values(examData[0])[2]); // 学生姓名
+    const user = await this.usersRepository.findOne({
+      name: username,
+    });
+    const subjects = examData.slice(3); // 科目数据
+    const exams = []
+    subjects.forEach(row => {
+      const exam = new Exam();
+      exam.recruit_id = recruit_id;
+      exam.user_id = user.id;
+      exam.period = period;
+      exam.subject = String(Object.values(row)[2]);
+      exam.score = row.__EMPTY_1;
+    })
+    return exams;
   }
 }

@@ -3,6 +3,7 @@ import { UploadController } from './upload.controller';
 import { UploadService } from './upload.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { UsersModule } from 'src/users/users.module';
+import { ExamModule } from 'src/exam/exam.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { UsersModule } from 'src/users/users.module';
       //   },
       // }),
     }),
-    UsersModule
+    UsersModule,
+    ExamModule
   ],
   controllers: [UploadController],
   providers: [UploadService],

@@ -20,6 +20,7 @@ import { promises as fs } from 'fs';
 import * as fsEx from 'fs-extra';
 import * as iconvLite from 'iconv-lite';
 import { logger } from 'src/libs/utils';
+import { ExamService } from 'src/exam/exam.service';
 
 const { NODE_ENV } = process.env;
 const baseHost = baseHosts[NODE_ENV] || {
@@ -33,6 +34,7 @@ export class UploadController {
   constructor(
     private readonly uploadService: UploadService,
     private readonly usersService: UsersService,
+    private readonly examService: ExamService,
   ) {}
 
   // 上传照片（单个）
@@ -124,18 +126,23 @@ export class UploadController {
     // 解压上传的文件
     const zip = new AdmZip(path, 'GBK');
     const targetDirectory = `./${baseHost.uploadPath}exams/${timestamp}`;
-
+    console.log(__dirname, targetDirectory);
+    
     try {
       await fs.mkdir(targetDirectory, { recursive: true });
       zip.extractAllTo(targetDirectory, /*overwrite*/ true);
 
-      const files = await fsEx.readdir(path.join(__dirname, targetDirectory));
-      logger(files);
+      const files = await fsEx.readdir(targetDirectory);
+      console.log(files);
       files.forEach((file) => {
-        logger(file);
+        console.log(`${targetDirectory}/${file}`);
 
-        const examData = this.uploadService.getExamData(file.path);
-        logger(examData);
+        const examData = this.uploadService.getExamData(`${targetDirectory}/${file}`);
+        console.log(examData);
+
+        const exams = this.uploadService.handleExamData(examData, recruit_id, period);
+
+        this.examService.insertExam(exams)
       });
     } catch (error) {
       logger(error)
