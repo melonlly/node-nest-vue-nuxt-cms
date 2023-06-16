@@ -4,6 +4,8 @@ import { UploadService } from './upload.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { UsersModule } from 'src/users/users.module';
 import { ExamModule } from 'src/exam/exam.module';
+import { User } from 'src/users/users.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -21,7 +23,8 @@ import { ExamModule } from 'src/exam/exam.module';
       // }),
     }),
     UsersModule,
-    ExamModule
+    ExamModule,
+    TypeOrmModule.forFeature([User])
   ],
   controllers: [UploadController],
   providers: [UploadService],

@@ -114,7 +114,7 @@ export class UploadController {
   )
   async uploadExams(@UploadedFile() upload, @Body() body: any) {
     console.log(`uploadExams`, upload);
-    
+
     const { filename, path } = upload;
     // console.log('upload', upload, upload.recruit_id);
     console.log('body', body, body.recruit_id, body.period);
@@ -127,35 +127,32 @@ export class UploadController {
     const zip = new AdmZip(path, 'GBK');
     const targetDirectory = `./${baseHost.uploadPath}exams/${timestamp}`;
     console.log(__dirname, targetDirectory);
-    
+
     try {
       await fs.mkdir(targetDirectory, { recursive: true });
       zip.extractAllTo(targetDirectory, /*overwrite*/ true);
 
       const files = await fsEx.readdir(targetDirectory);
       console.log(files);
-      files.forEach((file) => {
+      files.forEach(async (file) => {
         console.log(`${targetDirectory}/${file}`);
 
-        const examData = this.uploadService.getExamData(`${targetDirectory}/${file}`);
+        const examData = this.uploadService.getExamData(
+          `${targetDirectory}/${file}`,
+        );
         console.log(examData);
 
-        const exams = this.uploadService.handleExamData(examData, recruit_id, period);
+        const exams = await this.uploadService.handleExamData(
+          examData,
+          recruit_id,
+          period,
+        );
 
-        this.examService.insertExam(exams)
+        this.examService.insertExams(exams);
       });
     } catch (error) {
-      logger(error)
+      logger(error);
     }
-
-    // const excelData = this.uploadService.getExcelData(path); // excel数据（第一个sheet)
-    // // logger(excelData)
-
-    // // 处理表格数据
-    // const users = this.uploadService.handleExcelData(excelData, recruit_id);
-    // // logger(users)
-    // // 批量插入user表
-    // await this.usersService.insertUsers(users);
 
     return upload;
   }

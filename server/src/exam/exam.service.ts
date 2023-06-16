@@ -144,7 +144,7 @@ export class ExamService {
     return await this.examRepository.count();
   }
 
-  async insertExam(exam: Exam): Promise<any> {
-    
+  async insertExams(exams: Exam[]): Promise<any> {
+    return await this.examRepository.save(exams);
   }
 }

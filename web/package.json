@@ -28,6 +28,8 @@
     "umi": "^3.3.15"
   },
   "devDependencies": {
+    "@babel/parser": "^7.22.5",
+    "@types/hoist-non-react-statics": "^3.3.1",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@umijs/test": "^3.3.15",
