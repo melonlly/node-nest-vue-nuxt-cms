@@ -20,7 +20,7 @@ export default () =>
         // host: '10.0.4.12',
         // port: 3306,
         username: 'root',
-        password: 'Kushuye777:',
+        password: '',
         database: 'sms-db',
         synchronize: false,
       },
