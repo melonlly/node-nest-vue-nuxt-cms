@@ -22,10 +22,11 @@ import { UpdataUserPasswordDto } from './dto/update-user-password.dto';
 import { UpdataUserAvatarDto } from './dto/update-user-avatar.dto';
 import { JwtAuthGuardUser } from 'src/auth/guards/jwt-auth.guard';
 import { Log } from 'src/libs/utils';
+import { RecruitService } from 'src/recruit/recruit.service';
 @ApiTags('用户')
 @Controller('api/users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService, private readonly recruitService: RecruitService) {}
 
   // 获取用户信息
   @UseGuards(JwtAuthGuardUser)
@@ -99,6 +100,23 @@ export class UsersController {
     const user = await this.usersService.findOneById(params.id);
     delete user.password;
     return user;
+  }
+
+  // 根据 card_no 查找
+  @UseGuards(JwtAuthGuardUser)
+  @Post('/find')
+  @ApiOperation({ summary: '根据 card_no 查找' })
+  async findOneByCardNo(@Body() params: RetrieveUserDto): Promise<any> {
+    console.log(params);
+
+    const user = await this.usersService.findOneByCardNo(params.name);
+    delete user.password;
+    const recruit = await this.recruitService.findOneById(user.recruit_id);
+    return {
+      ...user,
+      period: recruit.period,
+      plan: recruit.plan
+    };
   }
 
   // 根据 id 更新密码

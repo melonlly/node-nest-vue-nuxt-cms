@@ -114,7 +114,7 @@ export class RecruitService {
   }
 
   // 根据ID查找
-  async findOneById(id: string): Promise<any> {
+  async findOneById(id: string): Promise<Recruit> {
     return this.recruitRepository.findOne(id);
   }
 

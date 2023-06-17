@@ -1,34 +1,32 @@
+import { extend } from 'umi-request';
 
-
-
-export function render(oldRender) {
-
-  oldRender();
-}
-
-// 运行时配置
-export const request = {
-  // 统一的请求设定
-  timeout: 2000,
+export const request = extend({
+  prefix: '',
+  timeout: 60000,
+  headers: {
+    Authorization: 'Bearer ' + window.localStorage.getItem('token'),
+  },
   // 错误处理： umi@3 的错误处理方案。
   errorConfig: {
     // 错误接收及处理
-    errorHandler: (error, opts) => {
-
-    }
+    errorHandler: (error, opts) => {},
   },
   // 请求拦截器
   requestInterceptors: [
     (config) => {
       // 拦截请求配置，进行个性化处理。
-      return { ...config};
-    }
+      return { ...config };
+    },
   ],
   // 响应拦截器
   responseInterceptors: [
     (response) => {
       // 拦截响应数据，进行个性化处理
       return response;
-    }
-  ]
-};
+    },
+  ],
+});
+
+export function render(oldRender) {
+  oldRender();
+}
