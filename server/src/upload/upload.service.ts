@@ -6,6 +6,7 @@ import { baseHosts } from 'src/libs/config';
 import { Exam } from 'src/exam/exam.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Recruit } from 'src/recruit/recruit.entity';
 
 const { NODE_ENV } = process.env;
 const baseHost = baseHosts[NODE_ENV] || {
@@ -18,6 +19,8 @@ export class UploadService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Recruit)
+    private recruitRepository: Repository<Recruit>,
   ) {}
 
   // 获取excel内容
@@ -75,19 +78,31 @@ export class UploadService {
     period: string,
   ): Promise<Exam[]> {
     const username = String(Object.values(examData[0])[2]); // 学生姓名
+    console.log(`当前查询学生姓名：${username}`);
+
     const user = await this.usersRepository.findOne({
       name: username,
     });
+    if (!user) {
+      return [];
+    }
+    const recruit = await this.recruitRepository.findOne({
+      id: recruit_id,
+    });
+    if (!recruit) {
+      return []
+    }
     const subjects = examData.slice(3); // 科目数据
-    const exams = []
-    subjects.forEach(row => {
+    const exams = [];
+    subjects.forEach((row) => {
       const exam = new Exam();
-      exam.recruit_id = recruit_id;
-      exam.user_id = user.id;
+      exam.recruit = recruit;
+      exam.user = user;
       exam.period = period;
       exam.subject = String(Object.values(row)[2]);
       exam.score = row.__EMPTY_1;
-    })
+      exams.push(exam);
+    });
     return exams;
   }
 }

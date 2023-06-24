@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "cross-env FM_SERVER_ENV=local nest start",
-    "start:dev": "cross-env FM_SERVER_ENV=local nest start --watch",
+    "start:dev": "cross-env FM_SERVER_ENV=local nest start",
     "start:debug": "cross-env FM_SERVER_ENV=local nest start --debug --watch",
     "start:prod": "cross-env FM_SERVER_ENV=prod node dist/src/main",
     "start:pm2": "cross-env FM_SERVER_ENV=prod node dist/src/main",

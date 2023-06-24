@@ -6,6 +6,8 @@ import { UsersModule } from 'src/users/users.module';
 import { ExamModule } from 'src/exam/exam.module';
 import { User } from 'src/users/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Recruit } from 'src/recruit/recruit.entity';
+import { RecruitModule } from 'src/recruit/recruit.module';
 
 @Module({
   imports: [
@@ -23,8 +25,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       // }),
     }),
     UsersModule,
+    RecruitModule,
     ExamModule,
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Recruit]),
   ],
   controllers: [UploadController],
   providers: [UploadService],

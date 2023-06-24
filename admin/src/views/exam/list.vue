@@ -271,7 +271,7 @@ export default {
         ids.push(row.id)
       }
 
-      this.handleClose(() => {
+      this.handleDel(() => {
         remove({
           ids,
         }).then((res) => {
@@ -291,7 +291,7 @@ export default {
     },
 
     // 删除提醒
-    handleClose(done) {
+    handleDel(done) {
       this.$confirm('确认删除？')
         .then(() => {
           done()

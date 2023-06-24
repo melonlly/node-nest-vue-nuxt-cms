@@ -133,20 +133,21 @@ export class UploadController {
       zip.extractAllTo(targetDirectory, /*overwrite*/ true);
 
       const files = await fsEx.readdir(targetDirectory);
-      console.log(files);
+      // console.log(files);
       files.forEach(async (file) => {
         console.log(`${targetDirectory}/${file}`);
 
         const examData = this.uploadService.getExamData(
           `${targetDirectory}/${file}`,
         );
-        console.log(examData);
+        // console.log(examData);
 
         const exams = await this.uploadService.handleExamData(
           examData,
           recruit_id,
           period,
         );
+        // console.log(exams);
 
         this.examService.insertExams(exams);
       });

@@ -7,7 +7,7 @@ import { RecruitController } from './recruit.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([Recruit])],
   providers: [RecruitService],
-  exports: [RecruitService],
+  exports: [RecruitService, TypeOrmModule.forFeature([Recruit])],
   controllers: [RecruitController],
 })
 export class RecruitModule {}

@@ -17,19 +17,9 @@ export class Exam {
   @JoinColumn({ name: 'recruitId' })
   recruit: Recruit;
 
-  @Column({
-    nullable: true,
-  })
-  recruit_id: string;
-
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
   user: User;
-
-  @Column({
-    nullable: true,
-  })
-  user_id: string;
 
   @Column({
     nullable: true,
